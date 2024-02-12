@@ -10,7 +10,9 @@ start = timer()
 def main():
     """Main structure calling requested functions from below."""
     print("")
-    get_data()
+    # Set API string here. Ensure that the API link is updated daily
+    api = "https://markets.tradingeconomics.com/chart/gbrelepri:com?span=max&securify=new&url=/united-kingdom/electricity-price&AUTH=KUtMcI%2B%2F%2B7EW7gh0s8u%2BYzSsifHJSBfRRFX8cC7QKRIn5m9SaYkuq7JGsvWjW7nQ7v6eSr0dWH85fCIwGpzBuA%3D%3D&ohlc=0"
+    get_data(api)
 
     # End Timer and calculate runtime.
     end = timer()
@@ -20,13 +22,11 @@ def main():
     print("********************************************************")
     print("")
 
-def get_data():
+def get_data(api):
     """Access Trading Economics chart API and request data shown.
     Remove unwanted values and save final returned result to CSV."""
     try:
         desc = "UK_wholesale_energy_data"
-        # Ensure to update the API link with a new authentication key as needed
-        api = "https://markets.tradingeconomics.com/chart/gbrelepri:com?span=max&securify=new&url=/united-kingdom/electricity-price&AUTH=KUtMcI%2B%2F%2B7EW7gh0s8u%2BYzSsifHJSBfRRFX8cC7QKRIn5m9SaYkuq7JGsvWjW7nQ7v6eSr0dWH85fCIwGpzBuA%3D%3D&ohlc=0"
 
         # Access the data API.
         req = requests.get(api, timeout=10)
