@@ -8,28 +8,35 @@ import pandas as pd
 start = timer()
 
 def main():
-    """Main structure calling requested functions from below."""
-    print("")
-    # Set API string here. Ensure that the API link is updated daily
-    api = "https://markets.tradingeconomics.com/chart/gbrelepri:com?span=max&securify=new&url=/united-kingdom/electricity-price&AUTH=KUtMcI%2B%2F%2B7EW7gh0s8u%2BYzSsifHJSBfRRFX8cC7QKRIn5m9SaYkuq7JGsvWjW7nQ7v6eSr0dWH85fCIwGpzBuA%3D%3D&ohlc=0"
-    get_data(api)
+    """Main structure calling requested functions."""
+    start = timer()  # Start the timer
+
+    api = read_api_url()  # Read API URL from file
+    if api:
+        get_data(api)
 
     # End Timer and calculate runtime.
     end = timer()
     total_time = end - start
-    print("")
-    print(f"This script took approx. {round(total_time, 2)} seconds to complete.")
-    print("********************************************************")
-    print("")
+    print(f"\nThis script took approx. {round(total_time, 2)} seconds to complete.")
+    print("********************************************************\n")
+
+def read_api_url():
+    """Read the API URL from a file."""
+    try:
+        with open("API.txt", "r") as file:
+            return file.readline().strip()  # Read the first line with strip to remove newline characters
+    except FileNotFoundError:
+        print("API.txt file not found. Please ensure the file exists in the same directory as this script.")
+        exit()
 
 def get_data(api):
-    """Access Trading Economics chart API and request data shown.
-    Remove unwanted values and save final returned result to CSV."""
+    """Access API and request data shown. Remove unwanted values and save the result to CSV."""
+    desc = "UK_wholesale_energy_data"
     try:
-        desc = "UK_wholesale_energy_data"
-
         # Access the data API.
         req = requests.get(api, timeout=10)
+        req.raise_for_status()  # Raises a HTTPError if the response status code is 4XX/5XX
         response = req.json()
 
         # Extract the relevant data.
@@ -40,25 +47,23 @@ def get_data(api):
         os.makedirs("Downloaded_Data", exist_ok=True)
 
         # Save data to CSV file.
-        csv_path = os.path.join("Downloaded_Data", "UK_wholesale_energy_data.csv")
+        csv_path = os.path.join("Downloaded_Data", f"{desc}.csv")
         datafr.to_csv(csv_path, index=False)
 
         # Confirm action completed.
         print(f"1. Download of {desc} Data was successful.")
 
-    except requests.RequestException:
+    except requests.HTTPError as http_err:
         print("********************************************************")
-        print(f"Request Exception Error, could not download {desc} from API source.")
+        print(f"HTTP Error occurred: {http_err}")
         print("********************************************************")
-
-    except (KeyError, NameError):
+    except requests.RequestException as req_err:
         print("********************************************************")
-        print(f"Could not find variable or dictionary value required to save {desc} CSV file.")
+        print(f"Request Exception Error, could not download {desc} from API source: {req_err}")
         print("********************************************************")
-
-    except Exception:  # pylint: disable=broad-exception-caught
+    except Exception as e:  # Catching other exceptions
         print("********************************************************")
-        print(f"Could not save {desc} CSV file.")
+        print(f"An unexpected error occurred: {e}")
         print("********************************************************")
 
 if __name__ == "__main__":

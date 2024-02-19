@@ -1,7 +1,7 @@
 # UK Energy Wholesale Electricity Price - Historical Data Downloader
 ## General Use Guidelines
 
-This script is designed to download historical UK wholesale electricity prices from the Trading Economics website. Please note that the API link within the script needs to be updated with the correct link each day you run it, as the AUTH key used by trading economics changes daily (see details below).
+This script is designed to download historical UK wholesale electricity prices from the Trading Economics website. Please note that the API link within the script needs to be updated with the correct link each day you run it, as the AUTH key used by trading economics changes daily (see details below). The API link is stored in the `API.txt` file, so no edits to the code are required, simply replace the web address in the .txt file.
 
 ## Prerequisites
 
