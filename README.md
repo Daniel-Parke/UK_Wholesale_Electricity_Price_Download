@@ -34,3 +34,5 @@ import os.path
 import requests
 import pandas as pd 
 ```
+
+![WiseWattage](https://i.imgur.com/Y7oMz2Y.png)
